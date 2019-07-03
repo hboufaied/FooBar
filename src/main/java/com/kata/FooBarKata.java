@@ -12,11 +12,15 @@ package com.kata;
  */
 public class FooBarKata {
 
-	public static void main (String[] args) {
+	private static final String QIX = "Qix";
+	private static final String BAR = "Bar";
+	private static final String FOO = "Foo";
+
+	public static void main(String[] args) {
 		FooBarKata fooBarKata = new FooBarKata();
 		fooBarKata.printFooBar();
 	}
-	
+
 	public void printFooBar() {
 		for (int i = 1; i <= 100; i++) {
 			System.out.println(replaceNumberWithRules(i));
@@ -24,41 +28,35 @@ public class FooBarKata {
 	}
 
 	public String replaceNumberWithRules(int number) {
-		
+
 		StringBuilder stringOfNumber = new StringBuilder();
-		boolean exitFooBarRule = false;
-		
+
 		// divisors have high precedence
-		 if(number % 3 == 0) {
-			 stringOfNumber.append("Foo");
-			 exitFooBarRule = Boolean.TRUE;
-		 }
-		 if(number % 5 == 0) {
-        	 stringOfNumber.append("Bar");
-			 exitFooBarRule = Boolean.TRUE;
-		 }
-		 /* convert number to array of char
-		  * check the char in order and convert it to string with according rules
-		  */
-		 char [] numberToCharArray = String.valueOf(number).toCharArray();
-		 for(char output : numberToCharArray) {
-			 if(output == '3'){
-				 stringOfNumber.append("Foo");
-				 exitFooBarRule = Boolean.TRUE;
-	    	 } else if(output == '5') {
-	        	 stringOfNumber.append("Bar");
-				 exitFooBarRule = Boolean.TRUE;
-	    	 } else if(output == '7') {
-	        	 stringOfNumber.append("Qix");
-				 exitFooBarRule = Boolean.TRUE;
-	    	 }
-		 }
-		 
-		 // if any rules is checked then return the value of the current number
-		 if(!exitFooBarRule) {
-			 stringOfNumber.append(number); 
-		 }
-		 
+		if (number % 3 == 0) {
+			stringOfNumber.append(FOO);
+		}
+		if (number % 5 == 0) {
+			stringOfNumber.append(BAR);
+		}
+		/*
+		 * convert number to array of char check the char in order and convert it to
+		 * string with according rules
+		 */
+		char[] numberToCharArray = String.valueOf(number).toCharArray();
+		for (char output : numberToCharArray) {
+			if (output == '3') {
+				stringOfNumber.append(FOO);
+			} else if (output == '5') {
+				stringOfNumber.append(BAR);
+			} else if (output == '7') {
+				stringOfNumber.append(QIX);
+			}
+		}
+
+		if (stringOfNumber.length() == 0) {
+			stringOfNumber.append(number);
+		}
+
 		return stringOfNumber.toString();
 	}
 
