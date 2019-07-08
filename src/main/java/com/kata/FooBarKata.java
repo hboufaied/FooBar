@@ -1,5 +1,12 @@
 package com.kata;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
+
+import static java.lang.Character.getNumericValue;
+import static java.util.stream.Collectors.joining;
+
 /**
  * @author Hamda BOUFAIED 
  * FoorBarKatacheck the number with following rules and
@@ -12,52 +19,57 @@ package com.kata;
  */
 public class FooBarKata {
 
+	public static void main(String[] args) {
+		FooBarKata fooBar = new FooBarKata();
+		IntStream.rangeClosed(1, 100)
+				.mapToObj(a -> fooBar.replaceNumberWithRules(a))
+				.forEach(System.out::println);
+	}
+	
 	private static final String QIX = "Qix";
 	private static final String BAR = "Bar";
 	private static final String FOO = "Foo";
-
-	public static void main(String[] args) {
-		FooBarKata fooBarKata = new FooBarKata();
-		fooBarKata.printFooBar();
+	
+	private static Map<Integer, String> fooBarContainsChar() {
+		Map<Integer, String> fooBarContains = new HashMap<>();
+		   fooBarContains.put(3, FOO);
+		   fooBarContains.put(5, BAR);
+		   fooBarContains.put(7, QIX);
+		return fooBarContains;
 	}
 
-	public void printFooBar() {
-		for (int i = 1; i <= 100; i++) {
-			System.out.println(replaceNumberWithRules(i));
-		}
+	private static Map<Integer, String> fooBarModulo() {
+		Map<Integer, String> fooBarModulo = new HashMap<>();
+		   fooBarModulo.put(3, FOO);
+		   fooBarModulo.put(5, BAR);
+		return fooBarModulo;
 	}
 
 	public String replaceNumberWithRules(int number) {
 
-		StringBuilder stringOfNumber = new StringBuilder();
+		Map<Integer, String> fooBarModulo = fooBarModulo();
 
-		// divisors have high precedence
-		if (number % 3 == 0) {
-			stringOfNumber.append(FOO);
-		}
-		if (number % 5 == 0) {
-			stringOfNumber.append(BAR);
-		}
-		/*
-		 * convert number to array of char check the char in order and convert it to
-		 * string with according rules
-		 */
-		char[] numberToCharArray = String.valueOf(number).toCharArray();
-		for (char output : numberToCharArray) {
-			if (output == '3') {
-				stringOfNumber.append(FOO);
-			} else if (output == '5') {
-				stringOfNumber.append(BAR);
-			} else if (output == '7') {
-				stringOfNumber.append(QIX);
-			}
-		}
+		Map<Integer, String> fooBarContains = fooBarContainsChar();
 
-		if (stringOfNumber.length() == 0) {
-			stringOfNumber.append(number);
-		}
+		StringBuilder result = new StringBuilder();
+		result.append(moduloNumber(fooBarModulo, number));
 
-		return stringOfNumber.toString();
+		String toFooBar = String.valueOf(number);
+		result.append(containsChar(fooBarContains, toFooBar));
+		return (result.length() == 0) ? toFooBar : result.toString();
 	}
 
+	private static String containsChar(Map<Integer, String> fooBarContainsChar, String stringReplacment) {
+		return stringReplacment.chars()
+				.mapToObj(integerAsChar -> fooBarContainsChar.getOrDefault(getNumericValue(integerAsChar), ""))
+				.collect(joining());
+	}
+
+	private static String moduloNumber(Map<Integer, String> fooBarModulo, int number) {
+		return fooBarModulo.keySet().stream()
+				.filter(toReplace -> number % toReplace == 0)
+				.map(fooBarModulo::get)
+				.collect(joining());
+	}
+	
 }
